@@ -1,0 +1,19 @@
+{
+  "name": "dm-web-monetization",
+  "version": "1.0.0",
+  "description": "Web Monetization API for game servers",
+  "main": "index.js",
+  "dependencies": {
+    "fs-extra": "^5.0.0",
+    "koa": "^2.5.0",
+    "koa-router": "^7.4.0",
+    "koa-web-monetization": "^1.0.2",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nathan Lie",
+  "license": "ISC"
+}

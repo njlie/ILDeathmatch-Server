@@ -36,7 +36,7 @@ ws.get('/server', (ctx) => {
 router.get('/pay/:id', monetization.receiver())
 
 // for player spawn
-router.get('/game/spawn/:id', monetization.spawnPlayer({price: 100}), async ctx => {
+router.get('/game/spawn/:id', monetization.checkHeaders(), monetization.spawnPlayer({price: 100}), async ctx => {
   console.log('spawning')
   const id = ctx.params.id
   console.log('Player ', id, ' spawned in for 100 drops.')
@@ -44,18 +44,17 @@ router.get('/game/spawn/:id', monetization.spawnPlayer({price: 100}), async ctx 
 })
 
 // For player disconnect.
-router.get('/game/disconnect/:id', async ctx => {
+router.get('/game/disconnect/:id', monetization.checkHeaders(), monetization.disconnectPlayer(), async ctx => {
   ctx.body = 'Player ' + ctx.params.id + 'disconnected.'
 })
 
 // For when a player gets a kill
-router.get('/game/kill/:id', monetization.payPlayer(100), async ctx => {
-  ctx.set('content-type', 'text/html')
+router.get('/game/kill/:id', monetization.checkHeaders(), monetization.payPlayer(100), async ctx => {
   ctx.body = 'Player ' + ctx.params.id + ' paid for kill.'
 })
 
 // For when a player gets killed
-router.get('/game/killed/:id', monetization.spawnPlayer({price: 100}), async ctx => {
+router.get('/game/killed/:id', monetization.checkHeaders(), monetization.spawnPlayer({price: 100}), async ctx => {
   ctx.body = 'Player ' + ctx.params.id + ' killed, deducting from balance.'
 })
 
@@ -64,7 +63,7 @@ router.get('/', async ctx => {
   ctx.body = fs.readFileSync(path.resolve(__dirname, 'index.html'))
 })
 
-router.post('/addpointer', monetization.addPointer(), async ctx => {
+router.get('/addpointer/:id/:pointer', monetization.addPointer(), async ctx => {
   ctx.body = 'Paid to spsp pointer.'
 })
 

@@ -10,19 +10,29 @@ class WebMonetizationDM extends WebMonetization {
     this.pointers = new Map()
   }
 
+  checkHeaders() {
+    return async (ctx, next) => {
+      console.log(ctx.headers)
+      return next()
+    }
+  }
+
   addPointer() {
     return async (ctx, next) => {
       console.log('adding spsp pointer')
+      console.log('ip=', ctx.params.id, ' pointer=', ctx.params.pointer)
 
       try {
         await SPSP.pay(plugin, {
-          receiver: '$testdm.localtunnel.me',
+          receiver: `$${ctx.params.pointer}.localtunnel.me`,
           sourceAmount: '0'
         })
 
         console.log('paid!')
+        this.pointers.set(ctx.params.id, ctx.params.pointer)
       } catch (e) {
-        return ctx.throw(400, 'Payment pointer is not valid')
+        console.log(e.message)
+        return ctx.throw(400, e.message)
       }
 
       return next()
@@ -46,13 +56,21 @@ class WebMonetizationDM extends WebMonetization {
 
       const hasBucket = this.buckets.get(id) || -1
       if (hasBucket === -1) {
+        console.log('Player is not on server')
         ctx.throw(400, 'Player is not on server')
+      }
+
+      const hasPointer = this.pointers.get(id) || -1
+      if (hasPointer === -1) {
+        console.log('Player does not have pointer')
+        ctx.throw(400, 'Player does not have pointer')
       }
 
       try {
         this.spend(id, _price)
         return next()
       } catch (e) {
+        console.log('spawnPlayer ERROR: ', e.message)
         return ctx.throw(402, e.message)
       }
       return next()
@@ -69,19 +87,40 @@ class WebMonetizationDM extends WebMonetization {
         ctx.throw(400, 'Player is not on server')
       }
 
-      this.buckets.set(id, balance + price)
-      console.log('player=', id, ' oldAmount=', balance, ' newAmount=', balance + price)
+      const pointer = this.pointers.get(id) || -1
+      if (pointer === -1) {
+        console.log('Player has no pointer')
+        ctx.throw(400, 'Player has no pointer')
+      }
+
+      console.log(`$${pointer}.localtunnel.me`)
+
+      try {
+        await SPSP.pay(plugin, {
+          receiver: `$${pointer}.localtunnel.me`,
+          sourceAmount: '10'
+        })
+
+        console.log('paid ', id, ' 10 drops at ', pointer)
+      } catch (e) {
+        console.log('payPlayer ERROR: ', e.message)
+        return ctx.throw(402, e.message)
+      }
+
+      // this.buckets.set(id, balance + price)
+      // console.log('player=', id, ' oldAmount=', balance, ' newAmount=', balance + price)
 
       return next()
     }
   }
 
-  disconnectPlayer (id) {
+  disconnectPlayer () {
     return async (ctx, next) => {
       console.log('disconnecting player')
       const id = ctx.params.id
       const balance = this.buckets.get(id) || 0
       this.buckets.set(id, 0)
+      this.pointers.delete(id)
       // Generate a random id for payment pointer.
       // const newId =
     }

@@ -1,9 +1,10 @@
 {
-  "name": "dm-web-monetization",
+  "name": "ILDeathmatch-Server",
   "version": "1.0.0",
-  "description": "Web Monetization API for game servers",
+  "description": "Web Monetization API for Quake III Arena",
   "main": "index.js",
   "dependencies": {
+    "dm-web-monetization": "git+https://github.com/njlie/dm-web-monetization.git",
     "fs-extra": "^5.0.0",
     "ilp-protocol-spsp": "^2.0.0",
     "koa": "^2.5.0",

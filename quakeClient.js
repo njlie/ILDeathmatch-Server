@@ -1,23 +1,6 @@
 var ip = false
 var baseUrl = new URL(window.location)
 
-function getMonetizationId (receiverUrl, clientId) {
-  return new Promise((resolve, reject) => {
-    var id = clientId
-    var receiver = receiverUrl.replace(/:id/, id)
-
-    if (window.monetize) {
-      window.monetize({
-        receiver
-      })
-      resolve(id)
-    } else {
-      console.log('Your extension is disabled or not installed.')
-      reject(new Error('web monetization is not enabled'))
-    }
-  })
-}
-
 window.addEventListener('load', function () {
   console.log('ready')
   const quake = document.getElementById('quake-game')

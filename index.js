@@ -6,7 +6,7 @@ const socket = KoaWebSocket(app)
 
 const router = require('koa-router')()
 const ws = require('koa-router')()
-const WebMonetizationDM = require('./WebMonetizationDM')
+const WebMonetizationDM = require('dm-web-monetization')
 const monetization = new WebMonetizationDM()
 const fs = require('fs-extra')
 const path = require('path')
@@ -20,14 +20,12 @@ render(app, {
 })
 
 ws.get('/', (ctx) => {
-  ctx.websocket.send('test')
   const ipMsg = 'IP: ' + ctx.websocket._socket.remoteAddress
   ctx.websocket.send(ipMsg)
   console.log('New connection on: ', ctx.websocket._socket.remoteAddress, ':', ctx.websocket._socket.remotePort)
   
   ctx.websocket.on('message', (message) => {
     console.log(message)
-    ctx.websocket.send('response')
   })
 
 })
@@ -35,7 +33,6 @@ ws.get('/', (ctx) => {
 
 ws.get('/server', (ctx) => {
   ctx.websocket.send('server connected')
-  console.log(ctx.websocket.clients)
   ctx.websocket.on('message', (message) => {
     console.log(message)
   })
@@ -45,7 +42,6 @@ router.get('/pay/:id', monetization.receiver())
 
 // for player spawn
 router.get('/game/spawn/:id', monetization.checkHeaders(), monetization.spawnPlayer({price: 100}), async ctx => {
-  console.log('spawning')
   const id = ctx.params.id
   console.log('Player ', id, ' spawned in for 100 drops.')
   ctx.body = id
@@ -76,7 +72,7 @@ router.get('/addpointer/:id/:pointer', monetization.addPointer(), async ctx => {
 })
 
 router.get('/clientDm.js', async ctx => {
-  ctx.body = await fs.readFile(path.resolve(__dirname, 'clientDm.js'))
+  ctx.body = await fs.readFile(path.resolve(path.dirname(require.resolve('dm-web-monetization')), 'clientDm.js'))
 })
 
 router.get('/quakeClient.js', async ctx => {

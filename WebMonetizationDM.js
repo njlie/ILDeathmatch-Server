@@ -99,7 +99,7 @@ class WebMonetizationDM extends WebMonetization {
       try {
         await SPSP.pay(plugin, {
           receiver: `${pointer}`,
-          sourceAmount: '10'
+          sourceAmount: '100'
         })
 
         console.log('paid ', id, ' 10 drops at ', pointer)

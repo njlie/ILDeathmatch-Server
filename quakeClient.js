@@ -18,23 +18,6 @@ function getMonetizationId (receiverUrl, clientId) {
   })
 }
 
-function addPaymentPointer () {
-  document.getElementById('pointer-message').innerHTML = 'Adding Pointer...'
-  const pointer = document.getElementById('payment-pointer').value
-  console.log('id: ', ip)
-  console.log('pointer: ', pointer)
-  fetch(`http://${baseUrl.host}/addpointer/${ip}/${pointer}`).then(res => {
-    console.log(res.status)
-    if(res.status === 200) {
-      document.getElementById('pointer-message').innerHTML = 'Pointer Added!'
-      window.location.href = `http://${baseUrl.host}/play?connect%20${baseUrl.hostname}:27960`
-    } else {
-      document.getElementById('pointer-message').innerHTML = 'Failed to ping pointer.'
-    }
-
-  })
-}
-
 window.addEventListener('load', function () {
   console.log('ready')
   const quake = document.getElementById('quake-game')
@@ -51,7 +34,6 @@ window.addEventListener('load', function () {
       ip = ipData === '::1' ? '127-0-0-1' : ipData.replace(/\./g, '-').replace(/[^0-9\-]/g, '')
       console.log(ip)
       getMonetizationId(`http://${baseUrl.host}/pay/:id`, ip)
-      document.getElementById('submit').removeAttribute('disabled')
     }
   })
 })

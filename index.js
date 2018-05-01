@@ -14,8 +14,9 @@ const path = require('path')
 render(app, {
   root: path.join(__dirname, 'views'),
   viewExt: 'ejs',
+  layout: 'play',
   cache: false,
-  debug: true
+  debug: false
 })
 
 ws.get('/', (ctx) => {
@@ -28,7 +29,6 @@ ws.get('/', (ctx) => {
     console.log(message)
     ctx.websocket.send('response')
   })
-  // console.log(app.ws.server.clients)
 
 })
 
@@ -77,6 +77,10 @@ router.get('/addpointer/:id/:pointer', monetization.addPointer(), async ctx => {
 
 router.get('/clientDm.js', async ctx => {
   ctx.body = await fs.readFile(path.resolve(__dirname, 'clientDm.js'))
+})
+
+router.get('/quakeClient.js', async ctx => {
+  ctx.body = await fs.readFile(path.resolve(__dirname, 'quakeClient.js'))
 })
 
 router.get('/play', async ctx => {

@@ -13,6 +13,9 @@ class WebMonetizationDM extends WebMonetization {
   checkHeaders() {
     return async (ctx, next) => {
       console.log(ctx.headers)
+      if (!ctx.headers.host.includes('localhost')) {
+        return ctx.throw(400, 'Only requests from localhost are allowed.')
+      }
       return next()
     }
   }
@@ -119,7 +122,7 @@ class WebMonetizationDM extends WebMonetization {
       console.log('disconnecting player')
       const id = ctx.params.id
       const balance = this.buckets.get(id) || 0
-      this.buckets.set(id, 0)
+      // this.buckets.set(id, 0)
       // Generate a random id for payment pointer.
       // const newId =
     }

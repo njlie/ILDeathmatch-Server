@@ -24,7 +24,7 @@ class WebMonetizationDM extends WebMonetization {
 
       try {
         await SPSP.pay(plugin, {
-          receiver: `$${ctx.params.pointer}.localtunnel.me`,
+          receiver: `${ctx.params.pointer}`,
           sourceAmount: '0'
         })
 
@@ -93,11 +93,11 @@ class WebMonetizationDM extends WebMonetization {
         ctx.throw(400, 'Player has no pointer')
       }
 
-      console.log(`$${pointer}.localtunnel.me`)
+      console.log(`${pointer}`)
 
       try {
         await SPSP.pay(plugin, {
-          receiver: `$${pointer}.localtunnel.me`,
+          receiver: `${pointer}`,
           sourceAmount: '10'
         })
 
@@ -120,7 +120,6 @@ class WebMonetizationDM extends WebMonetization {
       const id = ctx.params.id
       const balance = this.buckets.get(id) || 0
       this.buckets.set(id, 0)
-      this.pointers.delete(id)
       // Generate a random id for payment pointer.
       // const newId =
     }

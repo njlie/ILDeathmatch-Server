@@ -1,6 +1,7 @@
 const Koa = require('Koa')
 const KoaWebSocket = require('koa-websocket')
 const app = new Koa()
+const render = require('koa-ejs')
 const socket = KoaWebSocket(app)
 
 const router = require('koa-router')()
@@ -9,6 +10,13 @@ const WebMonetizationDM = require('./WebMonetizationDM')
 const monetization = new WebMonetizationDM()
 const fs = require('fs-extra')
 const path = require('path')
+
+render(app, {
+  root: path.join(__dirname, 'views'),
+  viewExt: 'ejs',
+  cache: false,
+  debug: true
+})
 
 ws.get('/', (ctx) => {
   ctx.websocket.send('test')
@@ -69,6 +77,19 @@ router.get('/addpointer/:id/:pointer', monetization.addPointer(), async ctx => {
 
 router.get('/clientDm.js', async ctx => {
   ctx.body = await fs.readFile(path.resolve(__dirname, 'clientDm.js'))
+})
+
+router.get('/play', async ctx => {
+  await ctx.render('play')
+})
+
+router.get('/css/game.css', async ctx => {
+  ctx.set('Content-Type', 'text/css')
+  ctx.body = await fs.readFile(path.resolve(__dirname, 'public/css/game.css'))
+})
+
+router.get('/quake/ioquake3.js', async ctx => {
+  ctx.body = await fs.readFile(path.resolve(__dirname, 'public/quake/ioquake3.js'))
 })
 
 app

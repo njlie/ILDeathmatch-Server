@@ -1,5 +1,5 @@
-const baseUrl = '10.20.25.168'
 var ip = false
+var baseUrl = new URL(window.location).host
 
 function getMonetizationId (receiverUrl, clientId) {
   return new Promise((resolve, reject) => {
@@ -18,23 +18,19 @@ function getMonetizationId (receiverUrl, clientId) {
   })
 }
 
-document.getElementById('payment-pointer').addEventListener('submit', event => {
-  event.preventDefault()
-  addPaymentPointer()
-})
-
 function addPaymentPointer () {
   document.getElementById('pointer-form').append('Adding Pointer...')
   const pointer = document.getElementById('payment-pointer').value
   console.log('id: ', ip)
   console.log('pointer: ', pointer)
-  fetch(`http://${baseUrl}:8080/addpointer/${ip}/${pointer}`)
+  fetch(`http://${baseUrl}/addpointer/${ip}/${pointer}`)
   document.getElementById('pointer-form').append('Pointer Added!')
 }
 
 window.onload = function () {
   console.log('ready')
-  const socket = new WebSocket(`ws://${baseUrl}:8080`)
+  const quake = document.getElementById('quake-game')
+  const socket = new WebSocket(`ws://${baseUrl}`)
 
   socket.addEventListener('open', function (event) {
     socket.send('Hello Server!')
@@ -46,7 +42,7 @@ window.onload = function () {
       const ipData = event.data.split('IP:').map(e => e.trim())[1]
       ip = ipData === '::1' ? '127-0-0-1' : ipData.replace(/\./g, '-').replace(/[^0-9\-]/g, '')
       console.log(ip)
-      getMonetizationId(`http://${baseUrl}:8080/pay/:id`, ip)
+      getMonetizationId(`http://${baseUrl}/pay/:id`, ip)
       document.getElementById('submit').removeAttribute('disabled')
     }
   })

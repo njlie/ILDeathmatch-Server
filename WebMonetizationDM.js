@@ -1,5 +1,4 @@
 const WebMonetization = require('koa-web-monetization')
-// const crypto = require('crypto')
 const plugin = require('ilp-plugin')()
 const SPSP = require('ilp-protocol-spsp')
 
@@ -12,7 +11,6 @@ class WebMonetizationDM extends WebMonetization {
 
   checkHeaders() {
     return async (ctx, next) => {
-      console.log(ctx.headers)
       if (!ctx.headers.host.includes('localhost')) {
         return ctx.throw(400, 'Only requests from localhost are allowed.')
       }
@@ -110,9 +108,6 @@ class WebMonetizationDM extends WebMonetization {
         return ctx.throw(402, e.message)
       }
 
-      // this.buckets.set(id, balance + price)
-      // console.log('player=', id, ' oldAmount=', balance, ' newAmount=', balance + price)
-
       return next()
     }
   }
@@ -122,14 +117,7 @@ class WebMonetizationDM extends WebMonetization {
       console.log('disconnecting player')
       const id = ctx.params.id
       const balance = this.buckets.get(id) || 0
-      // this.buckets.set(id, 0)
-      // Generate a random id for payment pointer.
-      // const newId =
     }
-  }
-
-  cashOut (id, paymentPointer) {
-    // TODO: Pay player based on bucket value and payment pointer
   }
 }
 

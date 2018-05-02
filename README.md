@@ -1,7 +1,7 @@
 # ILDeathmatch-Server
-API for monetizing ILDeathmatch
+An API for monetizing ILDeathmatch
 
-ILDeathmatch uses [dm-web-monetization] for payments over the [Interledger](https://interledger.org/).
+ILDeathmatch uses [dm-web-monetization](https://github.com/njlie/dm-web-monetization) for payments over the [Interledger](https://interledger.org/).
 
 ## Running the Server
 

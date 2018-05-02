@@ -1,4 +1,4 @@
-const Koa = require('Koa')
+const Koa = require('koa')
 const KoaWebSocket = require('koa-websocket')
 const app = new Koa()
 const render = require('koa-ejs')
@@ -51,7 +51,7 @@ router.get('/game/disconnect/:id', monetization.checkHeaders(), monetization.dis
 })
 
 // For when a player gets a kill
-router.get('/game/kill/:id', monetization.checkHeaders(), monetization.payPlayer(100), async ctx => {
+router.get('/game/kill/:id', monetization.checkHeaders(), monetization.payPlayer(200), async ctx => {
   ctx.body = 'Player ' + ctx.params.id + ' paid for kill.'
 })
 

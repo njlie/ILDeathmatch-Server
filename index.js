@@ -2,7 +2,7 @@ const Koa = require('Koa')
 const KoaWebSocket = require('koa-websocket')
 const app = new Koa()
 const render = require('koa-ejs')
-const socket = KoaWebSocket(app)
+KoaWebSocket(app)
 
 const router = require('koa-router')()
 const ws = require('koa-router')()
@@ -23,13 +23,11 @@ ws.get('/', (ctx) => {
   const ipMsg = 'IP: ' + ctx.websocket._socket.remoteAddress
   ctx.websocket.send(ipMsg)
   console.log('New connection on: ', ctx.websocket._socket.remoteAddress, ':', ctx.websocket._socket.remotePort)
-  
+
   ctx.websocket.on('message', (message) => {
     console.log(message)
   })
-
 })
-
 
 ws.get('/server', (ctx) => {
   ctx.websocket.send('server connected')

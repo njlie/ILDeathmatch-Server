@@ -21,9 +21,8 @@ window.addEventListener('load', function () {
   console.log = function (message) {
     if (message.includes('--ILDM_CONNECT') && message.indexOf('console_tell') === 0) {
       const index = message.split(' ')[2]
-      socket.send(JSON.stringify({ msg: message, index: index, monetizeId: ip }))
+      socket.send(JSON.stringify({ msg: message, index: index, monetizeId: id }))
     }
-    message = 'TOKEN: ' + message
     oldLog.apply(console, arguments)
   }
 })

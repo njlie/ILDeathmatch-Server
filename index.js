@@ -5,9 +5,14 @@ const render = require('koa-ejs')
 KoaWebSocket(app)
 
 const router = require('koa-router')()
+const bodyParser = require('koa-bodyparser')
 const ws = require('koa-router')()
 const WebMonetizationDM = require('dm-web-monetization')
 const monetization = new WebMonetizationDM()
+const verify = require('./verify')
+const EventEmitter = require('events')
+class DMEmitter extends EventEmitter {}
+const emitter = new DMEmitter()
 const fs = require('fs-extra')
 const path = require('path')
 
@@ -26,37 +31,49 @@ ws.get('/', (ctx) => {
 
   ctx.websocket.on('message', (message) => {
     console.log(message)
+    const parse = JSON.parse(message)
+    const msg = parse.msg || ''
+    console.log('msg: ', msg)
+    if (msg.includes('--ILDM_CONNECT')) {
+      console.log('got message: --ILDM_CONNECT')
+      emitter.emit('--ILDM_CONNECT_CLIENT', parse.index, parse.monetizeId)
+    }
   })
 })
 
 ws.get('/server', (ctx) => {
-  ctx.websocket.send('server connected')
+  ctx.websocket.send(JSON.stringify({msg:'server connected'}))
   ctx.websocket.on('message', (message) => {
     console.log(message)
+  })
+  emitter.on('--ILDM_CONNECT_CLIENT', (quakeIndex, monetizeId) => {
+    console.log('got event: --ILDM_CONNECT_CLIENT')
+    console.log('quakeIndex: ', quakeIndex, ' monetizeId: ', monetizeId)
+    ctx.websocket.send(JSON.stringify({msg: '--ILDM_CONNECT_CLIENT', index: quakeIndex, id: monetizeId}))
   })
 })
 
 router.get('/pay/:id', monetization.receiver())
 
 // for player spawn
-router.get('/game/spawn/:id', monetization.checkHeaders(), monetization.spawnPlayer({price: 100}), async ctx => {
+router.post('/game/spawn/:id', verify.verifyJWT(), monetization.spawnPlayer({price: 100}), async ctx => {
   const id = ctx.params.id
   console.log('Player ', id, ' spawned in for 100 drops.')
   ctx.body = id
 })
 
 // For player disconnect.
-router.get('/game/disconnect/:id', monetization.checkHeaders(), monetization.disconnectPlayer(), async ctx => {
+router.post('/game/disconnect/:id', verify.verifyJWT(), monetization.disconnectPlayer(), async ctx => {
   ctx.body = 'Player ' + ctx.params.id + 'disconnected.'
 })
 
 // For when a player gets a kill
-router.get('/game/kill/:id', monetization.checkHeaders(), monetization.payPlayer(200), async ctx => {
+router.post('/game/kill/:id', verify.verifyJWT(), monetization.payPlayer(100), async ctx => {
   ctx.body = 'Player ' + ctx.params.id + ' paid for kill.'
 })
 
 // For when a player gets killed
-router.get('/game/killed/:id', monetization.checkHeaders(), monetization.spawnPlayer({price: 100}), async ctx => {
+router.post('/game/killed/:id', verify.verifyJWT(), monetization.spawnPlayer({price: 100}), async ctx => {
   ctx.body = 'Player ' + ctx.params.id + ' killed, deducting from balance.'
 })
 
@@ -91,6 +108,7 @@ router.get('/quake/ioquake3.js', async ctx => {
 })
 
 app
+  .use(bodyParser())
   .use(router.routes())
   .use(router.allowedMethods())
 

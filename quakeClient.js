@@ -16,7 +16,7 @@ window.addEventListener('load', function () {
       getMonetizationId(`http://${baseUrl.host}/pay/:id`, id)
     }
   })
-  
+
   var oldLog = console.log
   console.log = function (message) {
     if (message.includes('--ILDM_CONNECT') && message.indexOf('console_tell') === 0) {

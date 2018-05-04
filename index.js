@@ -42,7 +42,7 @@ ws.get('/', (ctx) => {
 })
 
 ws.get('/server', (ctx) => {
-  ctx.websocket.send(JSON.stringify({msg:'server connected'}))
+  ctx.websocket.send(JSON.stringify({msg: 'server connected'}))
   ctx.websocket.on('message', (message) => {
     console.log(message)
   })

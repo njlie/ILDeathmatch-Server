@@ -14,12 +14,28 @@
   </body>
   <script src="/clientDm.js"></script>
   <script>
-    var ip = false
     var baseUrl = new URL(window.location)
+    function u8tohex(arr) {
+      var vals = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' ]
+      var ret = ''
+      for (var i = 0; i < arr.length; ++i) {
+        ret += vals[(arr[i] & 0xf0) / 0x10]
+        ret += vals[(arr[i] & 0x0f)]
+      }
+      return ret
+    }
+
+    function getRandomId() {
+      var idBytes = new Uint8Array(16)
+      crypto.getRandomValues(idBytes)
+      return u8tohex(idBytes)
+    }
     function addPaymentPointer () {
       document.getElementById('pointer-message').innerHTML = 'Adding Pointer...'
       const pointer = document.getElementById('payment-pointer').value
-      fetch(`http://${baseUrl.host}/addpointer/${ip}/${pointer}`).then(res => {
+      const monetizeId = document.cookie.split(';').filter(e => e.includes('monetizeId='))[0].split('=')[1]
+      console.log('monetizeId: ', monetizeId)
+      fetch(`http://${baseUrl.host}/addpointer/${monetizeId}/${pointer}`).then(res => {
         console.log(res.status)
         if(res.status === 200) {
           document.getElementById('pointer-message').innerHTML = 'Pointer Added!'
@@ -42,10 +58,9 @@
       socket.addEventListener('message', function (event) {
         console.log('Message from server ', event.data)
         if (event.data.includes('IP: ')) {
-          const ipData = event.data.split('IP:').map(e => e.trim())[1]
-          ip = ipData === '::1' ? '127-0-0-1' : ipData.replace(/\./g, '-').replace(/[^0-9\-]/g, '')
-          console.log(ip)
-          getMonetizationId(`http://${baseUrl.host}/pay/:id`, ip)
+          const id = getRandomId()
+          getMonetizationId(`http://${baseUrl.host}/pay/:id`, id)
+          document.cookie = 'monetizeId=' + id
           document.getElementById('submit').removeAttribute('disabled')
         }
       })

@@ -1,10 +1,9 @@
-var ip = false
 var id = false
 var baseUrl = new URL(window.location)
 
 window.addEventListener('load', function () {
   console.log('ready')
-  // id = document.cookie.split(';').filter(e => e.includes('monetizeId'))[0].split('=')[1] || false
+  id = document.cookie.split(';').filter(e => e.includes('monetizeId'))[0].split('=')[1] || false
   const socket = new WebSocket(`ws://${baseUrl.host}`)
 
   socket.addEventListener('open', function (event) {
@@ -14,10 +13,7 @@ window.addEventListener('load', function () {
   socket.addEventListener('message', function (event) {
     console.log('Message from server ', event.data)
     if (event.data.includes('IP: ')) {
-      const ipData = event.data.split('IP:').map(e => e.trim())[1]
-      ip = ipData === '::1' ? '127-0-0-1' : ipData.replace(/\./g, '-').replace(/[^0-9-]/g, '')
-      console.log(ip)
-      getMonetizationId(`http://${baseUrl.host}/pay/:id`, ip)
+      getMonetizationId(`http://${baseUrl.host}/pay/:id`, id)
     }
   })
   

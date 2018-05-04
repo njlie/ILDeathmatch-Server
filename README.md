@@ -3,7 +3,7 @@
 
 ## Overview
 
-ILDeathmatch-Server is a server that implements the [dm-web-monetization](https://github.com/njlie/dm-web-monetization) middleware for payments over the [Interledger](https://interledger.org/). It is meant to be used with [ILDeathmatch](https://github.com/njlie/ILDeathmatch), which is a Quaker server that makes API calls to this server as certain events occur in that Quake session.
+ILDeathmatch-Server is a server that implements the [dm-web-monetization](https://github.com/njlie/dm-web-monetization) middleware for payments over the [Interledger](https://interledger.org/). It is meant to be used with [ILDeathmatch](https://github.com/njlie/ILDeathmatch), which is a Quake III Arena server that makes API calls to this server as certain events occur in that Quake session.
 
 ## Running the Server
 
@@ -11,9 +11,9 @@ ILDeathmatch-Server is a server that implements the [dm-web-monetization](https:
 - [Moneyd](https://github.com/interledgerjs/moneyd-xrp)
 - [ILDeathmatch](https://github.com/njlie/ILDeathmatch)
 
-To start, make sure an instance of [moneyd](https://github.com/interledgerjs/moneyd-xrp) is running on your machine. This daemon will allow the server to make payments.
+To start, make sure an instance of [moneyd](https://github.com/interledgerjs/moneyd-xrp) is running on the machine you wish to host the server on. This daemon will allow the server to send and receive payments.
 
-First, run `npm install`.
+Now run `npm install`.
 
 Then, create a file in the root directory called `config.json` and insert the following data:
 ```
@@ -34,7 +34,7 @@ The server will now be listening on http://localhost:8080. To start using it for
 - [Minute](https://github.com/interledgerjs/minute)
 - [An ILP-SPSP Receiver](https://medium.com/interledger-blog/spsp-simple-payment-setup-protocol-2028292e6925)
 
-In order for a client to connect to your server and start earning/losing money on ILDeathmatch, they'll first need to install the [Minute extenstion](https://github.com/interledgerjs/minute), which allows streaming of payment to the server for spawning, and set up an [ILP-SPSP receiver](https://medium.com/interledger-blog/spsp-simple-payment-setup-protocol-2028292e6925), which will allow the receiving of payment for kills. The section "Receiving an SPSP Payment" is the most relevant section for connecting to ILDeathmatch.
+In order for a client to connect to your server and start earning/losing money on ILDeathmatch, they'll first need to install the [Minute extenstion](https://github.com/interledgerjs/minute), which allows the streaming of payment to the server for spawning, and set up an [ILP-SPSP receiver](https://medium.com/interledger-blog/spsp-simple-payment-setup-protocol-2028292e6925), which will allow the receiving of payment for kills. The section "Receiving an SPSP Payment" is the most relevant section for connecting to ILDeathmatch.
 
 ### How it works
 

@@ -1,7 +1,9 @@
 # ILDeathmatch-Server
-An API for monetizing ILDeathmatch
+> An API for monetizing ILDeathmatch
 
-ILDeathmatch uses [dm-web-monetization](https://github.com/njlie/dm-web-monetization) for payments over the [Interledger](https://interledger.org/).
+## Overview
+
+ILDeathmatch-Server is a server that implements the [dm-web-monetization](https://github.com/njlie/dm-web-monetization) middleware for payments over the [Interledger](https://interledger.org/). It is meant to be used with [ILDeathmatch](https://github.com/njlie/ILDeathmatch), which is a Quaker server that makes API calls to this server as certain events occur in that Quake session.
 
 ## Running the Server
 

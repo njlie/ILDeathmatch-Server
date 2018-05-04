@@ -11,11 +11,18 @@ ILDeathmatch uses [dm-web-monetization](https://github.com/njlie/dm-web-monetiza
 
 To start, make sure an instance of [moneyd](https://github.com/interledgerjs/moneyd-xrp) is running on your machine. This daemon will allow the server to make payments.
 
-Then run the following commands:
+First, run `npm install`.
+
+Then, create a file in the root directory called `config.json` and insert the following data:
 ```
-npm install
-node index.js
+{
+  "JWT_SECRET": "YOUR_OWN_SECRET"
+}
 ```
+
+`JWT_SECRET` is a string that is used to verify the signatures of JSON Web Tokens sent to the Web Monetization Module at `ILDeathmatch-Server` from the Quake server at `ILDeathmatch`. This prevents any third parties from calling your monetized APIs. **Make sure your secret here is the same as the secret you define in `config.json` at `ILDeathmatch`!**
+
+Now you can start your server with `node index.js`.
 
 The server will now be listening on http://localhost:8080. To start using it for Quake, follow the instructions at [ILDeathmatch](https://github.com/njlie/ILDeathmatch) to launch a Quake server instance that uses this API.
 

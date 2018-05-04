@@ -2,7 +2,7 @@
   <body>
     <div style="margin: 10%;">
       <h1>ILDeathmatch</h1>
-      <form onSubmit="return false;">
+      <form id="form-parent" onSubmit="submitForm(); return false">
         <div id="pointer-form" class="form-group">
           <label for="payment-pointer">Payment Pointer Subdomain</label>
           <input type="text" class="form-control" id="payment-pointer" placeholder="Enter Payment Pointer">
@@ -30,6 +30,16 @@
       crypto.getRandomValues(idBytes)
       return u8tohex(idBytes)
     }
+
+    function submitForm () {
+      const submit = document.getElementById('submit')
+      if (submit.classList.contains('disabled')) {
+        return
+      } else {
+        addPaymentPointer()
+      }
+    }
+
     function addPaymentPointer () {
       document.getElementById('pointer-message').innerHTML = 'Adding Pointer...'
       const pointer = document.getElementById('payment-pointer').value
